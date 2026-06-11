@@ -6,6 +6,20 @@
 
 An interactive, geospatial dashboard designed to map out the entire coffee shop ecosystem in **Tangerang Selatan (Tangsel), Indonesia**. Initially conceptualized to visualize retail banking prospects, this dashboard provides deep business insights, growth trends, and actionable data on MSMEs in the F&B sector.
 
+## 📖 Case Study & The Foundation
+
+This project was built as a response to a strategic business question:
+> *"How can retail banking leverage geospatial and growth trend data to systematically identify, target, and acquire high-potential F&B MSMEs (specifically coffee shops) to drive low-cost funding (CASA) and micro-credit expansion?"*
+
+### The Challenge
+Traditional retail banking acquisition often relies on disjointed data or physical surveys, which can be inefficient. As the F&B sector—specifically the coffee ecosystem—in Tangerang Selatan experiences explosive growth, there is a massive untapped potential for banking products such as EDC/QRIS merchant services, current accounts, and working capital loans (KUR).
+
+### The Solution
+By visualizing the distribution, density, and age of over 300 coffee shops, this dashboard transforms raw merchant data into an actionable **acquisition roadmap**. It helps strategy and sales teams to:
+- Visually identify unbanked or competitor-banked independent MSMEs.
+- Prioritize high-density commercial zones (e.g., Serpong, Pamulang) for aggressive canvassing.
+- Estimate daily cash-flow velocity to project CASA float potential and credit eligibility.
+
 ## ✨ Features
 
 - 🗺️ **Interactive Maps**: High-performance geospatial visualization powered by **Leaflet.js**, featuring distinct markers for Independent vs. Chain coffee shops.
