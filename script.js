@@ -62,17 +62,42 @@ function initMap() {
     const legend = L.control({ position: 'bottomright' });
     legend.onAdd = function (map) {
         const div = L.DomUtil.create('div', 'info legend');
+        L.DomEvent.disableClickPropagation(div);
+        
         div.innerHTML = `
-            <div style="font-weight: 700; margin-bottom: 8px; font-size: 13px; color: var(--primary-color);">Marker Legend</div>
-            <div class="legend-item">
-                <div class="legend-icon" style="background-color: #6B7C98; box-shadow: 0 0 4px rgba(0,0,0,0.4);"></div>
-                <span>Independent Coffee Shop</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="legendHeader">
+                <div style="font-weight: 700; font-size: 13px; color: var(--primary-color);">Marker Legend</div>
+                <i class="fas fa-chevron-down" id="legendToggleIcon" style="color: var(--text-muted); font-size: 12px; transition: transform 0.2s; margin-left: 12px;"></i>
             </div>
-            <div class="legend-item">
-                <div class="legend-icon" style="background-color: #AB978C; box-shadow: 0 0 8px rgba(171,151,140,0.8); width: 14px; height: 14px;"></div>
-                <span>Chain/Multi-Branch</span>
+            <div id="legendContent" style="margin-top: 8px;">
+                <div class="legend-item">
+                    <div class="legend-icon" style="background-color: #6B7C98; box-shadow: 0 0 4px rgba(0,0,0,0.4);"></div>
+                    <span>Independent Coffee Shop</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background-color: #AB978C; box-shadow: 0 0 8px rgba(171,151,140,0.8); width: 14px; height: 14px;"></div>
+                    <span>Chain/Multi-Branch</span>
+                </div>
             </div>
         `;
+
+        setTimeout(() => {
+            const header = document.getElementById('legendHeader');
+            const content = document.getElementById('legendContent');
+            const icon = document.getElementById('legendToggleIcon');
+            if (header && content && icon) {
+                header.addEventListener('click', () => {
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.style.display = 'none';
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            }
+        }, 100);
+
         return div;
     };
     legend.addTo(map);
@@ -260,6 +285,13 @@ function setupViewToggle() {
     const viewList = document.getElementById('listViewWrapper');
     const topBar = document.querySelector('.top-bar');
 
+    const collapseBottomSheet = () => {
+        if (window.innerWidth <= 768) {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.style.transform = '';
+        }
+    };
+
     btnMap.addEventListener('click', () => {
         viewList.style.display = 'none';
         btnMap.style.background = 'white';
@@ -269,6 +301,7 @@ function setupViewToggle() {
         btnList.style.boxShadow = 'none';
         btnList.style.color = 'var(--text-muted)';
         if(map) map.invalidateSize(); // Ensure Leaflet map re-render
+        collapseBottomSheet();
     });
 
     btnList.addEventListener('click', () => {
@@ -280,6 +313,7 @@ function setupViewToggle() {
         btnMap.style.boxShadow = 'none';
         btnMap.style.color = 'var(--text-muted)';
         renderListView();
+        collapseBottomSheet();
     });
 }
 
