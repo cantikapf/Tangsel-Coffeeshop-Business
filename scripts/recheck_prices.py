@@ -3,19 +3,27 @@ import os
 
 def format_price(raw_str):
     if not raw_str: return None
-    if raw_str == '$': return 'Rp 1.000 - Rp 25.000'
-    if raw_str == '$$$': return 'Rp 50.000 - Rp 100.000'
     
-    s = raw_str.replace('Rp\xa0', '').replace('\u2013', '-').replace('\ufffd', '-').replace(' ', '')
-    if 'K' in s:
-        parts = s.replace('K', '').split('-')
-        if len(parts) == 2:
-            return f'Rp {parts[0]}.000 - Rp {parts[1]}.000'
-    elif '.000' in s:
-        parts = s.replace('.000', '').split('-')
-        if len(parts) == 2:
-            return f'Rp {parts[0]}.000 - Rp {parts[1]}.000'
-    return raw_str
+    min_price = 50000 # default
+    if raw_str == '$': 
+        min_price = 1000
+    elif raw_str == '$$$': 
+        min_price = 50000
+    else:
+        s = raw_str.replace('Rp\xa0', '').replace('\u2013', '-').replace('\ufffd', '-').replace(' ', '')
+        matches = [int(p) for p in s.replace('K', '').replace('.000', '').split('-') if p.isdigit()]
+        if matches:
+            if 'Di bawah' in s or raw_str.startswith('Di'):
+                min_price = 1000
+            else:
+                min_price = matches[0] * 1000
+
+    if min_price < 35000:
+        return 'Budget (Under Rp 35.000)'
+    elif min_price <= 75000:
+        return 'Mid-Tier (Rp 35.000 - Rp 75.000)'
+    else:
+        return 'Premium (Above Rp 75.000)'
 
 raw_file = 'data/raw/raw_results_full.json'
 master_file = 'data/processed/tangsel_coffee_master.json'
