@@ -3,6 +3,7 @@
 const DATA_URL = './data/processed/tangsel_coffee_master.json';
 let coffeeData = [];
 let map;
+let kecamatanLayer;
 let markersLayer;
 let heatLayer;
 let trendChart;
@@ -40,17 +41,48 @@ function initMap() {
         maxZoom: 20
     }).addTo(map);
 
+    const aestheticColors = {
+        'Ciputat': '#7FB3D5',
+        'Ciputat Timur': '#76D7C4',
+        'Pamulang': '#F8C471',
+        'Pondok Aren': '#F1948A',
+        'Serpong': '#C39BD3',
+        'Serpong Utara': '#E59866',
+        'Setu': '#82E0AA'
+    };
+
     // Muat Batas Wilayah GeoJSON (Kecamatan di Tangerang Selatan)
     fetch('./data/geo/tangsel_kecamatan.geojson')
         .then(res => res.json())
         .then(data => {
-            L.geoJSON(data, {
-                style: {
-                    color: '#5E5653',
-                    weight: 2,
-                    opacity: 0.6,
-                    fillColor: '#6B7C98',
-                    fillOpacity: 0.05
+            kecamatanLayer = L.geoJSON(data, {
+                style: function (feature) {
+                    const name = feature.properties.name || 'Unknown';
+                    const color = aestheticColors[name] || '#6B7C98';
+                    return {
+                        color: color,
+                        weight: 2,
+                        opacity: 0.8,
+                        fillColor: color,
+                        fillOpacity: 0.2
+                    };
+                },
+                onEachFeature: function (feature, layer) {
+                    const name = feature.properties.name;
+                    if (name) {
+                        layer.bindTooltip(name, {
+                            permanent: true,
+                            direction: 'center',
+                            className: 'kecamatan-tooltip'
+                        });
+                    }
+                    layer.on('click', function () {
+                        const filter = document.getElementById('filterKecamatan');
+                        if (filter) {
+                            filter.value = name;
+                            filter.dispatchEvent(new Event('change'));
+                        }
+                    });
                 }
             }).addTo(map);
         })
@@ -317,8 +349,34 @@ function setupViewToggle() {
     });
 }
 
+function highlightKecamatan(targetName) {
+    if (!kecamatanLayer) return;
+    kecamatanLayer.eachLayer(function (layer) {
+        const name = layer.feature.properties.name;
+        const color = layer.options.color;
+        if (targetName === 'All' || targetName === '' || !targetName) {
+            layer.setStyle({ weight: 2, opacity: 0.8, fillOpacity: 0.2, color: color });
+            layer.getTooltip().setOpacity(1);
+            if (targetName === 'All') map.setView([-6.29, 106.68], 12);
+        } else {
+            if (name === targetName) {
+                layer.setStyle({ weight: 4, opacity: 1, fillOpacity: 0.5, color: color });
+                layer.bringToFront();
+                layer.getTooltip().setOpacity(1);
+                map.flyToBounds(layer.getBounds(), { padding: [50, 50], duration: 1.5 });
+            } else {
+                layer.setStyle({ weight: 1, opacity: 0.3, fillOpacity: 0.05, color: '#ccc' });
+                layer.getTooltip().setOpacity(0.2);
+            }
+        }
+    });
+}
+
 function setupListFilters() {
-    document.getElementById('filterKecamatan').addEventListener('change', renderListView);
+    document.getElementById('filterKecamatan').addEventListener('change', (e) => {
+        renderListView();
+        highlightKecamatan(e.target.value);
+    });
     document.getElementById('filterYear').addEventListener('change', renderListView);
     document.getElementById('searchShop').addEventListener('input', renderListView);
     
