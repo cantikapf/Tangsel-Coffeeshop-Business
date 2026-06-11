@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupViewToggle();
     setupListFilters();
     setupBottomSheet();
+    repositionChart();
     updateDashboard(parseInt(document.getElementById('yearSlider').value));
 });
 
@@ -621,3 +622,22 @@ function setupBottomSheet() {
     document.addEventListener('touchmove', onTouchMove, { passive: true });
     document.addEventListener('touchend', onTouchEnd);
 }
+
+// 8. Reposition Chart for Mobile
+function repositionChart() {
+    const chartContainer = document.getElementById('chartContainer');
+    const insightPanel = document.querySelector('.insight-panel');
+    const mapViewWrapper = document.getElementById('mapViewWrapper');
+    if (!chartContainer || !insightPanel || !mapViewWrapper) return;
+
+    if (window.innerWidth <= 768) {
+        if (chartContainer.parentElement !== insightPanel) {
+            insightPanel.insertBefore(chartContainer, insightPanel.firstChild);
+        }
+    } else {
+        if (chartContainer.parentElement !== mapViewWrapper) {
+            mapViewWrapper.appendChild(chartContainer);
+        }
+    }
+}
+window.addEventListener('resize', repositionChart);
