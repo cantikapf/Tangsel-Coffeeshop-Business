@@ -385,6 +385,12 @@ body {
         width: 220px !important;
     }
 
+    /* Prevent legend from being covered by bottom sheet */
+    .leaflet-bottom {
+        bottom: 22vh !important;
+        transition: bottom 0.3s;
+    }
+
     /* Make list view cards stack better */
     .shop-card {
         flex-direction: column;
