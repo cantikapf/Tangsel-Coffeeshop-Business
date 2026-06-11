@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tangerang Selatan Coffee Ecosystem: Retail Banking Prospect</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Panel -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 style="font-size: 20px;">Tangerang Selatan<br>Coffee Ecosystem</h1>
+                <span class="subtitle" style="display: block; margin-top: 4px; opacity: 0.9; font-weight: 500;">Retail Banking Prospect</span>
+            </div>
+            
+            <div style="padding: 20px 24px 0 24px;">
+                <div class="view-toggle" style="display: flex; background: var(--bg-light); border-radius: 8px; padding: 4px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                    <button id="btnMapView" style="flex: 1; padding: 8px 0; border: none; background: white; border-radius: 6px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--primary-color); cursor: pointer; box-shadow: var(--shadow-sm); transition: all 0.2s;">Map Visualization</button>
+                    <button id="btnListView" style="flex: 1; padding: 8px 0; border: none; background: transparent; border-radius: 6px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--text-muted); cursor: pointer; transition: all 0.2s;">Directory List</button>
+                </div>
+            </div>
+            
+            <div class="insight-panel">
+                <h2>Business Insights</h2>
+                <div class="insight-card">
+                    <h3>Executive Summary</h3>
+                    <p>Out of <strong>328 coffee shops</strong> in Tangerang Selatan, <strong>298 outlets (90%)</strong> are actionable retail acquisition targets—comprising 292 independent MSMEs and <strong>6 local chain outlets</strong> (Suksestama, H47, Pilona). Only 30 national corporate chain outlets (Starbucks, Tomoro, Kopi Kenangan, Tuku, Fore, Flash, Nako, Bagi Kopi, Kopi Calf) are excluded from the scope as they fall under corporate banking. The growth of Tangsel coffee MSMEs is massive: <strong>+108 new outlets since 2023</strong>, indicating a wave of entrepreneurs representing a prime expansion opportunity for the banking ecosystem.</p>
+                </div>
+
+                <div class="insight-card highlight">
+                    <h3>🎯 Acquisition Focus: Retail MSMEs</h3>
+                    <ul id="recommendation-list">
+                        <li><strong>Addressable Market:</strong> 298 outlets spread across all sub-districts. Top three highest density zones: <strong>Serpong</strong>, <strong>Pamulang</strong>, and <strong>Pondok Aren</strong>—each serving as a priority target for a blitz acquisition campaign.</li>
+                        <li><strong>Local Chains = Quick Wins:</strong> 6 outlets from 3 local brands (Suksestama, H47, Pilona) require multi-location financial management but are not yet at corporate scale. This is a high-potential segment to onboard as flagship merchants—acquiring one brand secures multiple outlets simultaneously.</li>
+                        <li><strong>Why MSMEs First:</strong> The majority of F&B MSMEs do not yet have separate business accounts. Every new account opened represents net new funding for the bank.</li>
+                    </ul>
+                </div>
+
+                <div class="insight-card highlight">
+                    <h3>💰 Priority #1: CASA Growth</h3>
+                    <ul>
+                        <li><strong>Onboarding Strategy:</strong> Every acquired coffee MSME must be facilitated in opening a <em>Livin' by Mandiri</em> account as their primary operational account. By acquiring all target merchants, the total low-cost funding float reaches <strong id="casaFloat" style="color: var(--primary-color);">Rp852 million - Rp1.99 billion/day</strong>.</li>
+                        <li><strong>Livin' Merchant for Operations:</strong> Every Livin' account is instantly activated with <em>Livin' Merchant</em>, enabling shop owners to accept QRIS payments, monitor transactions in real-time, and enjoy automated settlements—making Mandiri their primary bank for daily operations.</li>
+                    </ul>
+                    <p style="font-size: 11px; color: #7F8C8D; margin-top: 12px; font-style: italic; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 4px;">
+                        *Note: Float/CASA estimates are dynamically calculated from the aggregation of <strong>(Average Price × Operating Hours × Base Transactions) × Crowd Multiplier</strong> (a 0.5x to 3.5x multiplier validated by Google Reviews volume for each shop).
+                    </p>
+                </div>
+
+                <div class="insight-card highlight">
+                    <h3>📊 Fee-Based Income & Activation KPI</h3>
+                    <ul>
+                        <li><strong>FBI Projection:</strong> 298 merchants × 0.7% MDR × Rp5 million daily digital volume = potential fee-based income of <strong>~Rp312 million/month</strong> from the Tangsel cluster. This figure excludes transfer fees, top-ups, and other value-added services.</li>
+                        <li><strong>2% Activation Target:</strong> For every batch of onboarded merchants, at least <strong>2%</strong> must achieve Active Transacting Merchant status (≥10 trx/day) within the first 90 days. This metric serves as a leading indicator of successful active CASA conversion and long-term retention.</li>
+                    </ul>
+                </div>
+
+                <div class="insight-card highlight">
+                    <h3>📱 Mandiri Digital Ecosystem</h3>
+                    <ul>
+                        <li><strong>Full-Stack Onboarding:</strong> A single acquisition visit = Livin' account opening + Livin' Merchant activation + QRIS registration. This one-stop approach minimizes drop-off and immediately locks the merchant into the Mandiri ecosystem.</li>
+                        <li><strong>Cross-Sell Opportunity:</strong> Daily transaction data from Livin' Merchant acts as alternative credit scoring material. Coffee MSMEs with a consistent track record of ≥6 months are highly eligible for Micro Credit (KUR) or working capital loans for business expansion.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>&copy; 2026 Cantikaputri Febrianti</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar / Controls -->
+            <header class="top-bar">
+                <div class="control-group">
+                    <label for="yearSlider">Timeline Filter: <span id="yearDisplay">All Time</span></label>
+                    <input type="range" id="yearSlider" min="2010" max="2026" value="2026" step="1">
+                    <div style="margin-top: 8px; font-size: 13px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 8px; font-weight: 500; color: var(--text-main); cursor: pointer;">
+                            <input type="checkbox" id="toggleHeatmap" checked style="cursor: pointer;">
+                            Show Heatmap
+                        </label>
+                        <label class="toggle-chart-wrapper" style="display: flex; align-items: center; gap: 8px; font-weight: 500; color: var(--text-main); cursor: pointer;">
+                            <input type="checkbox" id="toggleChart" checked style="cursor: pointer;">
+                            Show Chart
+                        </label>
+                    </div>
+                </div>
+                <div class="stats-summary">
+                    <div class="stat-box">
+                        <span class="stat-value" id="totalShops">0</span>
+                        <span class="stat-label">Active Shops</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Map & Chart View -->
+            <div id="mapViewWrapper" style="display: block; width: 100%; height: 100%;">
+                <!-- Map Area -->
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+
+                <!-- Chart Area -->
+                <div class="chart-container" id="chartContainer">
+                    <div class="chart-header">
+                        <span class="chart-title"><i class="fas fa-chart-line"></i> Growth Chart</span>
+                        <button id="btnMinimizeChart" class="minimize-btn" title="Minimize Chart">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List View -->
+            <div id="listViewWrapper" class="list-view-wrapper" style="display: none;">
+                <div class="list-filters">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--primary-color);">By Sub-district</label>
+                        <select id="filterKecamatan" style="padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; min-width: 180px;">
+                            <option value="All">All Areas</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--primary-color);">By Year Opened</label>
+                        <select id="filterYear" style="padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; min-width: 150px;">
+                            <option value="All">All Years</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--primary-color);">By Price Range</label>
+                        <select id="filterPrice" style="padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; min-width: 160px;">
+                            <option value="All">All Prices</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; max-width: 400px; margin-left: auto;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--primary-color);">Search Shop Name</label>
+                        <input type="text" id="searchShop" placeholder="Type coffee shop name..." style="padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; width: 100%;">
+                    </div>
+                </div>
+                <div id="shopListContainer" class="shop-list-container">
+                    <!-- Shop cards will be generated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Heat -->
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Script -->
+    <script src="script.js"></script>
+</body>
+</html>
