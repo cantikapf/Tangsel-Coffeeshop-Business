@@ -563,7 +563,7 @@ function setupBottomSheet() {
     const getHeights = () => {
         const viewportHeight = window.innerHeight;
         const expandedHeight = viewportHeight * 0.85; // 85vh
-        const collapsedHeight = viewportHeight * 0.35; // 35vh
+        const collapsedHeight = viewportHeight * 0.20; // 20vh
         return { maxTranslateY: expandedHeight - collapsedHeight };
     };
 
