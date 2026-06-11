@@ -321,6 +321,22 @@ function setupListFilters() {
     document.getElementById('filterKecamatan').addEventListener('change', renderListView);
     document.getElementById('filterYear').addEventListener('change', renderListView);
     document.getElementById('searchShop').addEventListener('input', renderListView);
+    
+    // Mobile Filter Toggle
+    const toggleHeader = document.getElementById('filterToggleMobile');
+    const toggleIcon = document.getElementById('filterToggleIcon');
+    const filterContent = document.getElementById('listFiltersContent');
+    if (toggleHeader && toggleIcon && filterContent) {
+        toggleHeader.addEventListener('click', () => {
+            filterContent.classList.toggle('minimized');
+            if (filterContent.classList.contains('minimized')) {
+                toggleIcon.style.transform = 'rotate(180deg)';
+            } else {
+                toggleIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+
     const filterPrice = document.getElementById('filterPrice');
     if (filterPrice) filterPrice.addEventListener('change', renderListView);
 }
