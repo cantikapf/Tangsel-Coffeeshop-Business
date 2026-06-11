@@ -9,12 +9,12 @@ let heatLayer;
 let trendChart;
 
 function formatRupiah(num) {
-  if (num === null || num === undefined) return '–';
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(num);
+    if (num === null || num === undefined) return '–';
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+    }).format(num);
 }
 
 // Inisialisasi Aplikasi
@@ -89,13 +89,13 @@ function initMap() {
         .catch(err => console.error('Error loading GeoJSON:', err));
 
     markersLayer = L.layerGroup().addTo(map);
-    
+
     // Tambahkan Legend Peta
     const legend = L.control({ position: 'bottomright' });
     legend.onAdd = function (map) {
         const div = L.DomUtil.create('div', 'info legend');
         L.DomEvent.disableClickPropagation(div);
-        
+
         div.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="legendHeader">
                 <div style="font-weight: 700; font-size: 13px; color: var(--primary-color);">Marker Legend</div>
@@ -141,14 +141,14 @@ async function loadData() {
         const response = await fetch(DATA_URL);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
-        
+
         // Bersihkan data yang mungkin tidak memiliki koordinat
         coffeeData = data.filter(d => d.latitude && d.longitude);
-        
+
         // Populate dropdown options
-        const years = [...new Set(coffeeData.map(d => d.yearOpened).filter(Boolean))].sort((a,b) => b-a);
+        const years = [...new Set(coffeeData.map(d => d.yearOpened).filter(Boolean))].sort((a, b) => b - a);
         const kecamatans = [...new Set(coffeeData.map(d => d.kecamatan || 'Others'))].sort();
-        
+
         const filterYear = document.getElementById('filterYear');
         years.forEach(y => {
             const opt = document.createElement('option');
@@ -181,7 +181,7 @@ async function loadData() {
             const yearsList = coffeeData.map(d => d.yearOpened).filter(Boolean);
             const minYear = Math.min(...yearsList);
             const maxYear = 2026; // Scope max
-            
+
             const slider = document.getElementById('yearSlider');
             slider.min = minYear;
             slider.max = maxYear;
@@ -236,7 +236,7 @@ function setupSlider() {
     if (btnMinimize) {
         btnMinimize.addEventListener('click', () => {
             chartContainer.classList.toggle('minimized');
-            
+
             // Sync with top bar checkbox if it's minimized vs hidden
             if (chartToggle && chartContainer.classList.contains('minimized')) {
                 // We keep display = 'flex' but minimized
@@ -252,13 +252,13 @@ function updateDashboard(targetYear) {
 
     // Filter data: Hanya kedai yang buka pada atau sebelum target tahun (jika null, asumsikan 2026)
     const filteredData = coffeeData.filter(d => (d.yearOpened || 2026) <= targetYear);
-    
+
     updateMap(filteredData);
     updateChart(targetYear);
-    
+
     // Update Statistik
     document.getElementById('totalShops').textContent = filteredData.length;
-    
+
     // Hitung Estimasi CASA
     let totalRevenue = 0;
     filteredData.forEach(shop => {
@@ -267,15 +267,15 @@ function updateDashboard(targetYear) {
         if (shop.priceRange === 'Budget (Under Rp 35.000)') { avgPrice = 30000; baseTx = 15; }
         else if (shop.priceRange === 'Mid-Tier (Rp 35.000 - Rp 75.000)') { avgPrice = 55000; baseTx = 10; }
         else if (shop.priceRange === 'Premium (Above Rp 75.000)') { avgPrice = 100000; baseTx = 8; }
-        
+
         if (avgPrice === 0) return;
-        
+
         let multiplier = 0.5; // default sepi
         const rev = shop.reviews || 0;
         if (rev >= 50 && rev < 300) multiplier = 1.0;
         else if (rev >= 300 && rev < 1000) multiplier = 2.0;
         else if (rev >= 1000) multiplier = 3.5;
-        
+
         let hoursOpen = 10;
         if (shop.open_hours) {
             const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
@@ -283,23 +283,23 @@ function updateDashboard(targetYear) {
                 const timeStr = shop.open_hours[today][0];
                 const match = timeStr.match(/(\d{1,2})(?:\.(\d{2}))?\s*(am|pm)?\s*[-–]\s*(\d{1,2})(?:\.(\d{2}))?\s*(am|pm)?/i);
                 if (match) {
-                  let startH = parseInt(match[1], 10);
-                  let startM = match[2] ? parseInt(match[2], 10) : 0;
-                  let startMeridiem = match[3] ? match[3].toLowerCase() : '';
-                  let endH = parseInt(match[4], 10);
-                  let endM = match[5] ? parseInt(match[5], 10) : 0;
-                  let endMeridiem = match[6] ? match[6].toLowerCase() : '';
-                  if (startMeridiem === 'pm' && startH !== 12) startH += 12;
-                  if (startMeridiem === 'am' && startH === 12) startH = 0;
-                  if (endMeridiem === 'pm' && endH !== 12) endH += 12;
-                  if (endMeridiem === 'am' && endH === 12) endH = 0;
-                  let diff = (endH + endM/60) - (startH + startM/60);
-                  if (diff < 0) diff += 24;
-                  hoursOpen = diff;
+                    let startH = parseInt(match[1], 10);
+                    let startM = match[2] ? parseInt(match[2], 10) : 0;
+                    let startMeridiem = match[3] ? match[3].toLowerCase() : '';
+                    let endH = parseInt(match[4], 10);
+                    let endM = match[5] ? parseInt(match[5], 10) : 0;
+                    let endMeridiem = match[6] ? match[6].toLowerCase() : '';
+                    if (startMeridiem === 'pm' && startH !== 12) startH += 12;
+                    if (startMeridiem === 'am' && startH === 12) startH = 0;
+                    if (endMeridiem === 'pm' && endH !== 12) endH += 12;
+                    if (endMeridiem === 'am' && endH === 12) endH = 0;
+                    let diff = (endH + endM / 60) - (startH + startM / 60);
+                    if (diff < 0) diff += 24;
+                    hoursOpen = diff;
                 }
             }
         }
-        
+
         totalRevenue += avgPrice * (baseTx * multiplier) * hoursOpen;
     });
 
@@ -321,7 +321,7 @@ function formatRupiahLoose(num) {
 function updateInsights() {
     const totalShops = coffeeData.length;
     const independent = coffeeData.filter(d => !d.isChain).length;
-    
+
     // Hitung Estimasi CASA
     let totalRevenue = 0;
     coffeeData.forEach(d => {
@@ -363,7 +363,7 @@ function setupViewToggle() {
         btnList.style.background = 'transparent';
         btnList.style.boxShadow = 'none';
         btnList.style.color = 'var(--text-muted)';
-        if(map) map.invalidateSize(); // Ensure Leaflet map re-render
+        if (map) map.invalidateSize(); // Ensure Leaflet map re-render
         collapseBottomSheet();
     });
 
@@ -410,7 +410,7 @@ function setupListFilters() {
     });
     document.getElementById('filterYear').addEventListener('change', renderListView);
     document.getElementById('searchShop').addEventListener('input', renderListView);
-    
+
     // Mobile Filter Toggle
     const toggleHeader = document.getElementById('filterToggleMobile');
     const toggleIcon = document.getElementById('filterToggleIcon');
@@ -436,7 +436,7 @@ function renderListView() {
     const selPrice = document.getElementById('filterPrice') ? document.getElementById('filterPrice').value : 'All';
     const searchQuery = document.getElementById('searchShop').value.toLowerCase();
     const container = document.getElementById('shopListContainer');
-    
+
     container.innerHTML = '';
 
     const listData = coffeeData.filter(d => {
@@ -456,7 +456,7 @@ function renderListView() {
         const card = document.createElement('div');
         card.className = 'shop-card';
         const mapsLink = shop.directLink || `https://www.google.com/maps/search/?api=1&query=${shop.latitude},${shop.longitude}`;
-        
+
         let hoursHtml = '';
         if (shop.open_hours) {
             const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
@@ -517,10 +517,10 @@ function updateMap(dataToShow) {
 
     dataToShow.forEach(shop => {
         heatPoints.push([shop.latitude, shop.longitude, 1]); // Set intensitas konstan
-        
+
         const isChain = shop.isChain;
         const marker = L.marker([shop.latitude, shop.longitude], { icon: isChain ? chainIcon : customIcon });
-        
+
         // Buat link ke Google Maps
         const mapsLink = shop.directLink || `https://www.google.com/maps/search/?api=1&query=${shop.latitude},${shop.longitude}`;
 
@@ -560,7 +560,7 @@ function updateMap(dataToShow) {
                 </div>
             </div>
         `;
-        
+
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
     });
@@ -589,18 +589,18 @@ function updateMap(dataToShow) {
 function updateChart(targetYear) {
     // Siapkan data agregasi tahun demi tahun
     const yearCounts = {};
-    
+
     // Hitung jumlah toko per tahun HINGGA targetYear
     coffeeData.forEach(shop => {
         const y = shop.yearOpened || 2026;
-        if(y <= targetYear) {
+        if (y <= targetYear) {
             yearCounts[y] = (yearCounts[y] || 0) + 1;
         }
     });
 
     // Urutkan tahun dari awal hingga target year
-    const sortedYears = Object.keys(yearCounts).sort((a,b) => a - b);
-    
+    const sortedYears = Object.keys(yearCounts).sort((a, b) => a - b);
+
     // Hitung kumulatif
     let cumulative = 0;
     const labels = [];
@@ -648,7 +648,7 @@ function updateChart(targetYear) {
                 if (elements.length > 0) {
                     const dataIndex = elements[0].index;
                     const clickedYear = labels[dataIndex];
-                    
+
                     const slider = document.getElementById('yearSlider');
                     if (slider) {
                         slider.value = clickedYear;
@@ -668,7 +668,7 @@ function updateChart(targetYear) {
                     padding: 12,
                     displayColors: false,
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return `Cumulative Total: ${context.parsed.y} Shops`;
                         }
                     }
@@ -694,7 +694,7 @@ function setupBottomSheet() {
     const sidebar = document.getElementById('sidebar');
     const dragHandle = document.getElementById('dragHandle');
     const sidebarHeader = document.querySelector('.sidebar-header');
-    
+
     if (!sidebar || !dragHandle) return;
 
     let startY = 0;
@@ -731,7 +731,7 @@ function setupBottomSheet() {
         isDragging = true;
         hasMoved = false;
         startY = e.touches[0].clientY;
-        
+
         const style = window.getComputedStyle(sidebar);
         const transform = style.getPropertyValue('transform');
         if (transform !== 'none') {
@@ -740,7 +740,7 @@ function setupBottomSheet() {
         } else {
             initialTranslateY = getHeights().maxTranslateY;
         }
-        
+
         sidebar.classList.add('dragging');
     };
 
@@ -748,13 +748,13 @@ function setupBottomSheet() {
         if (!isDragging) return;
         const deltaY = e.touches[0].clientY - startY;
         if (Math.abs(deltaY) > 5) hasMoved = true;
-        
+
         let newTranslateY = initialTranslateY + deltaY;
         const { maxTranslateY } = getHeights();
-        
+
         if (newTranslateY < 0) newTranslateY = newTranslateY * 0.2;
         if (newTranslateY > maxTranslateY) newTranslateY = maxTranslateY + (newTranslateY - maxTranslateY) * 0.2;
-        
+
         sidebar.style.transform = `translateY(${newTranslateY}px)`;
     };
 
@@ -762,13 +762,13 @@ function setupBottomSheet() {
         if (!isDragging) return;
         isDragging = false;
         sidebar.classList.remove('dragging');
-        
+
         if (!hasMoved) {
             // It was just a tap, toggle it
             toggleSidebar();
             return;
         }
-        
+
         const { maxTranslateY } = getHeights();
         const style = window.getComputedStyle(sidebar);
         const transform = style.getPropertyValue('transform');
@@ -776,7 +776,7 @@ function setupBottomSheet() {
         if (transform !== 'none') {
             currentTranslate = new DOMMatrix(transform).m42;
         }
-        
+
         if (currentTranslate < maxTranslateY * 0.6) {
             sidebar.style.transform = `translateY(0)`;
         } else {
@@ -787,7 +787,7 @@ function setupBottomSheet() {
     dragHandle.addEventListener('touchstart', onTouchStart, { passive: true });
     document.addEventListener('touchmove', onTouchMove, { passive: true });
     document.addEventListener('touchend', onTouchEnd);
-    
+
     // Allow clicking the header or drag handle to toggle
     if (sidebarHeader) {
         sidebarHeader.addEventListener('click', (e) => {
