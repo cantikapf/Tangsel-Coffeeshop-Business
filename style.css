@@ -323,10 +323,11 @@ body {
 
     .sidebar-header {
         padding: 24px 16px 12px 16px; /* Extra top padding for drag handle */
+        text-align: center;
     }
 
     .sidebar-header h1 {
-        font-size: 16px;
+        font-size: 20px;
     }
 
     .insight-panel {
