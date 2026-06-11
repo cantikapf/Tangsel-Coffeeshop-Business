@@ -85,7 +85,7 @@ Because this project fetches local JSON and GeoJSON data using the `fetch()` API
 ## 📝 Business Insights Highlights
 
 - **Target Acquisition**: Identified 298 highly actionable retail MSME targets out of 328 total coffee shops.
-- **CASA Float Potential**: Estimated Rp852 million to Rp1.99 billion/day in low-cost funding (CASA) through aggressive merchant onboarding.
+- **CASA Float Potential**: Estimated Rp 1.9+ Billion/day in low-cost funding (CASA) through aggressive merchant onboarding.
 - **Strategic Focus**: Highlighting multi-branch local establishments (e.g., Suksestama, H47) as high-value quick wins for retail banking.
 
 ---
