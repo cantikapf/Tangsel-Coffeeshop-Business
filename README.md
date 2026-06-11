@@ -20,6 +20,11 @@ By visualizing the distribution, density, and age of over 300 coffee shops, this
 - Prioritize high-density commercial zones (e.g., Serpong, Pamulang) for aggressive canvassing.
 - Estimate daily cash-flow velocity to project CASA float potential and credit eligibility.
 
+### Why Coffee Shops in Tangerang Selatan?
+1. **High Transaction Velocity:** Coffee shops generate a massive volume of daily micro-transactions, making them the perfect entry point for EDC/QRIS merchant acquisition and digital ecosystem locking.
+2. **Demographic Sweet Spot:** Tangsel (particularly areas like BSD, Bintaro, and Alam Sutera) is a major hub for young professionals, university students, and affluent suburbanites with a strong "work from cafe" and lifestyle culture, ensuring business sustainability.
+3. **Credit Scaling Potential:** As these independent MSMEs mature, their recorded daily transaction history through the bank's QRIS/EDC becomes highly accurate alternative credit data, opening secure doors for working capital loans.
+
 ## ✨ Features
 
 - 🗺️ **Interactive Maps**: High-performance geospatial visualization powered by **Leaflet.js**, featuring distinct markers for Independent vs. Chain coffee shops.
