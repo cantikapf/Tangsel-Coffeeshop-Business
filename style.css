@@ -412,10 +412,20 @@ body {
         padding-bottom: 20vh; /* Space for bottom sheet sidebar */
     }
     
+    .list-filters-header {
+        display: block;
+        padding: 16px;
+        font-weight: 600;
+    }
+
     .list-filters {
         padding: 16px;
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .list-filters.minimized {
+        display: none;
     }
     
     .shop-list-container {
@@ -743,4 +753,26 @@ input[type=range]::-webkit-slider-runnable-track {
     vertical-align: middle;
     text-transform: uppercase;
     font-weight: 700;
+}
+/* Mobile Filter Header */
+.list-filters-header { display: none; }
+@media (max-width: 768px) {
+    .list-filters-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 14px 16px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--primary-color);
+    }
+    .list-filters.minimized {
+        display: none !important;
+    }
 }
