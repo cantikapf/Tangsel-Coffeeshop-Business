@@ -46,13 +46,26 @@ async function convertKmzToGeojson() {
 }
 
 // --- 2. DATA ENRICHMENT ---
-function avgPriceFromRange(range) {
-  switch (range) {
-    case 'Budget (Under Rp 35.000)': return 30000;
-    case 'Mid-Tier (Rp 35.000 - Rp 75.000)': return 55000;
-    case 'Premium (Above Rp 75.000)': return 100000;
-    default: return null;
+function avgPriceFromRange(rangeStr) {
+  if (!rangeStr) return 50000;
+  const cleanStr = rangeStr.replace(/\./g, '');
+  const matches = cleanStr.match(/\d+/g);
+  let min = 0, max = 0;
+  if (matches && matches.length >= 2) {
+    min = parseInt(matches[0]);
+    max = parseInt(matches[1]);
+  } else if (matches && matches.length === 1) {
+    if (rangeStr.includes('Di bawah') || rangeStr.includes('1.000')) {
+      min = 1000;
+      max = parseInt(matches[0]);
+    } else {
+      min = parseInt(matches[0]);
+      max = min;
+    }
   }
+  let avgPrice = (min + max) / 2;
+  if (avgPrice < 1000) avgPrice = avgPrice * 1000;
+  return avgPrice > 0 ? avgPrice : 50000;
 }
 
 function hoursOpen(openHoursObj) {
@@ -81,13 +94,11 @@ function hoursOpen(openHoursObj) {
   return diff;
 }
 
-function txPerHour(range) {
-  switch (range) {
-    case 'Budget (Under Rp 35.000)': return 20;
-    case 'Mid-Tier (Rp 35.000 - Rp 75.000)': return 15;
-    case 'Premium (Above Rp 75.000)': return 10;
-    default: return 8;
-  }
+function txPerHour(avgPrice) {
+  if (avgPrice < 35000) return 20;
+  if (avgPrice <= 75000) return 15;
+  if (avgPrice > 75000) return 10;
+  return 8;
 }
 
 function enrichData() {
@@ -108,7 +119,7 @@ function enrichData() {
       return;
     }
     const openHours = hoursOpen(shop.open_hours);
-    const perHour = txPerHour(priceRange);
+    const perHour = txPerHour(avgPrice);
     const revenue = avgPrice * perHour * openHours;
     shop.estimatedDailyRevenue = Math.round(revenue / 100000) * 100000;
     updated += 1;

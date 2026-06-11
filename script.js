@@ -264,9 +264,25 @@ function updateDashboard(targetYear) {
     filteredData.forEach(shop => {
         let avgPrice = 0;
         let baseTx = 8;
-        if (shop.priceRange === 'Budget (Under Rp 35.000)') { avgPrice = 30000; baseTx = 15; }
-        else if (shop.priceRange === 'Mid-Tier (Rp 35.000 - Rp 75.000)') { avgPrice = 55000; baseTx = 10; }
-        else if (shop.priceRange === 'Premium (Above Rp 75.000)') { avgPrice = 100000; baseTx = 8; }
+        if (shop.priceRange) {
+            const cleanStr = shop.priceRange.replace(/\./g, '');
+            const matches = cleanStr.match(/\d+/g);
+            if (matches && matches.length >= 2) {
+                avgPrice = (parseInt(matches[0]) + parseInt(matches[1])) / 2;
+            } else if (matches && matches.length === 1) {
+                if (shop.priceRange.includes('Di bawah') || shop.priceRange.includes('1.000')) {
+                    avgPrice = (1000 + parseInt(matches[0])) / 2;
+                } else {
+                    avgPrice = parseInt(matches[0]);
+                }
+            }
+            if (avgPrice < 1000) avgPrice *= 1000;
+        }
+        if (avgPrice === 0) avgPrice = 50000;
+
+        if (avgPrice < 35000) baseTx = 15;
+        else if (avgPrice <= 75000) baseTx = 10;
+        else baseTx = 8;
 
         if (avgPrice === 0) return;
 
@@ -532,8 +548,26 @@ function updateMap(dataToShow) {
         let priceWidth = '33%';
         let priceColor = '#5E5653'; // Budget
         let priceLabel = shop.priceRange || 'N/A';
-        if (priceLabel.includes('Mid-Tier')) { priceWidth = '66%'; priceColor = '#AB978C'; }
-        if (priceLabel.includes('Premium')) { priceWidth = '100%'; priceColor = '#6B7C98'; }
+        
+        let avgForUI = 0;
+        if (shop.priceRange) {
+            const cleanStr = shop.priceRange.replace(/\./g, '');
+            const matches = cleanStr.match(/\d+/g);
+            if (matches && matches.length >= 2) {
+                avgForUI = (parseInt(matches[0]) + parseInt(matches[1])) / 2;
+            } else if (matches && matches.length === 1) {
+                if (shop.priceRange.includes('Di bawah') || shop.priceRange.includes('1.000')) {
+                    avgForUI = (1000 + parseInt(matches[0])) / 2;
+                } else {
+                    avgForUI = parseInt(matches[0]);
+                }
+            }
+            if (avgForUI < 1000) avgForUI *= 1000;
+        }
+        if (avgForUI === 0) avgForUI = 50000;
+
+        if (avgForUI > 75000) { priceWidth = '100%'; priceColor = '#6B7C98'; }
+        else if (avgForUI >= 35000) { priceWidth = '66%'; priceColor = '#AB978C'; }
 
         const imgHtml = shop.thumbnail ? `<div style="width: 100%; height: 140px; background: url('${shop.thumbnail}') center/cover;"></div>` : `<div style="width: 100%; height: 60px; background: linear-gradient(135deg, var(--primary-color), #5E5653);"></div>`;
 
