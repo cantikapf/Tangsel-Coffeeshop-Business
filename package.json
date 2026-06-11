@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@tmcw/togeojson": "^7.1.2",
+    "@turf/turf": "^7.3.5",
+    "axios": "^1.17.0",
+    "cheerio": "^1.2.0",
+    "googlethis": "^1.8.0",
+    "https-proxy-agent": "^9.1.0",
+    "puppeteer": "^25.1.0",
+    "unzipper": "^0.12.3",
+    "xmldom": "^0.6.0"
+  }
+}
