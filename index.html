@@ -131,7 +131,11 @@
 
             <!-- List View -->
             <div id="listViewWrapper" class="list-view-wrapper" style="display: none;">
-                <div class="list-filters">
+                <div class="list-filters-header" id="filterToggleMobile">
+                    <span><i class="fas fa-filter"></i> Filter Directory</span>
+                    <i class="fas fa-chevron-up" id="filterToggleIcon" style="transition: transform 0.2s;"></i>
+                </div>
+                <div class="list-filters" id="listFiltersContent">
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <label style="font-size: 12px; font-weight: 600; color: var(--primary-color);">By Sub-district</label>
                         <select id="filterKecamatan" style="padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; min-width: 180px;">
