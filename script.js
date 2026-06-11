@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupSlider();
     setupViewToggle();
     setupListFilters();
+    setupBottomSheet();
     updateDashboard(parseInt(document.getElementById('yearSlider').value));
 });
 
@@ -546,4 +547,77 @@ function updateChart(targetYear) {
             }
         }
     });
+}
+
+// 7. Setup Mobile Bottom Sheet Drag
+function setupBottomSheet() {
+    const sidebar = document.getElementById('sidebar');
+    const dragHandle = document.getElementById('dragHandle');
+    
+    if (!sidebar || !dragHandle) return;
+
+    let startY = 0;
+    let isDragging = false;
+    let initialTranslateY = 0;
+
+    const getHeights = () => {
+        const viewportHeight = window.innerHeight;
+        const expandedHeight = viewportHeight * 0.85; // 85vh
+        const collapsedHeight = viewportHeight * 0.35; // 35vh
+        return { maxTranslateY: expandedHeight - collapsedHeight };
+    };
+
+    const onTouchStart = (e) => {
+        if (window.innerWidth > 768) return;
+        isDragging = true;
+        startY = e.touches[0].clientY;
+        
+        const style = window.getComputedStyle(sidebar);
+        const transform = style.getPropertyValue('transform');
+        if (transform !== 'none') {
+            const matrix = new DOMMatrix(transform);
+            initialTranslateY = matrix.m42;
+        } else {
+            initialTranslateY = getHeights().maxTranslateY;
+        }
+        
+        sidebar.classList.add('dragging');
+    };
+
+    const onTouchMove = (e) => {
+        if (!isDragging) return;
+        const deltaY = e.touches[0].clientY - startY;
+        let newTranslateY = initialTranslateY + deltaY;
+        
+        const { maxTranslateY } = getHeights();
+        
+        if (newTranslateY < 0) newTranslateY = newTranslateY * 0.2;
+        if (newTranslateY > maxTranslateY) newTranslateY = maxTranslateY + (newTranslateY - maxTranslateY) * 0.2;
+        
+        sidebar.style.transform = `translateY(${newTranslateY}px)`;
+    };
+
+    const onTouchEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        sidebar.classList.remove('dragging');
+        
+        const { maxTranslateY } = getHeights();
+        const style = window.getComputedStyle(sidebar);
+        const transform = style.getPropertyValue('transform');
+        let currentTranslate = maxTranslateY;
+        if (transform !== 'none') {
+            currentTranslate = new DOMMatrix(transform).m42;
+        }
+        
+        if (currentTranslate < maxTranslateY * 0.6) {
+            sidebar.style.transform = `translateY(0)`;
+        } else {
+            sidebar.style.transform = ''; // revert to CSS default (collapsed)
+        }
+    };
+
+    dragHandle.addEventListener('touchstart', onTouchStart, { passive: true });
+    document.addEventListener('touchmove', onTouchMove, { passive: true });
+    document.addEventListener('touchend', onTouchEnd);
 }
