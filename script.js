@@ -309,6 +309,37 @@ function updateDashboard(targetYear) {
     }
 }
 
+function formatRupiahLoose(num) {
+    if (num >= 1000000000) {
+        return 'Est. Rp ' + (num / 1000000000).toFixed(1) + ' Billion';
+    } else if (num >= 1000000) {
+        return 'Est. Rp ' + Math.round(num / 1000000) + ' Million';
+    }
+    return 'Est. ' + formatRupiah(num);
+}
+
+function updateInsights() {
+    const totalShops = coffeeData.length;
+    const independent = coffeeData.filter(d => !d.isChain).length;
+    
+    // Hitung Estimasi CASA
+    let totalRevenue = 0;
+    coffeeData.forEach(d => {
+        const estRevenue = parseFloat(d.estRevenue) || 0;
+        totalRevenue += estRevenue;
+    });
+
+    const valIndependent = document.getElementById('valIndependent');
+    if (valIndependent) {
+        valIndependent.textContent = independent;
+    }
+
+    const casaEl = document.getElementById('casaFloat');
+    if (casaEl) {
+        casaEl.textContent = formatRupiahLoose(totalRevenue) + '/day';
+    }
+}
+
 // Setup Toggles untuk Pindah View (Map vs List)
 function setupViewToggle() {
     const btnMap = document.getElementById('btnMapView');
@@ -662,11 +693,13 @@ function updateChart(targetYear) {
 function setupBottomSheet() {
     const sidebar = document.getElementById('sidebar');
     const dragHandle = document.getElementById('dragHandle');
+    const sidebarHeader = document.querySelector('.sidebar-header');
     
     if (!sidebar || !dragHandle) return;
 
     let startY = 0;
     let isDragging = false;
+    let hasMoved = false;
     let initialTranslateY = 0;
 
     const getHeights = () => {
@@ -676,9 +709,27 @@ function setupBottomSheet() {
         return { maxTranslateY: expandedHeight - collapsedHeight };
     };
 
+    const toggleSidebar = () => {
+        if (window.innerWidth > 768) return;
+        const { maxTranslateY } = getHeights();
+        const style = window.getComputedStyle(sidebar);
+        const transform = style.getPropertyValue('transform');
+        let currentTranslate = maxTranslateY;
+        if (transform && transform !== 'none') {
+            currentTranslate = new DOMMatrix(transform).m42;
+        }
+
+        if (currentTranslate > maxTranslateY * 0.5) {
+            sidebar.style.transform = `translateY(0)`; // Expand
+        } else {
+            sidebar.style.transform = ''; // Collapse
+        }
+    };
+
     const onTouchStart = (e) => {
         if (window.innerWidth > 768) return;
         isDragging = true;
+        hasMoved = false;
         startY = e.touches[0].clientY;
         
         const style = window.getComputedStyle(sidebar);
@@ -696,8 +747,9 @@ function setupBottomSheet() {
     const onTouchMove = (e) => {
         if (!isDragging) return;
         const deltaY = e.touches[0].clientY - startY;
-        let newTranslateY = initialTranslateY + deltaY;
+        if (Math.abs(deltaY) > 5) hasMoved = true;
         
+        let newTranslateY = initialTranslateY + deltaY;
         const { maxTranslateY } = getHeights();
         
         if (newTranslateY < 0) newTranslateY = newTranslateY * 0.2;
@@ -706,10 +758,16 @@ function setupBottomSheet() {
         sidebar.style.transform = `translateY(${newTranslateY}px)`;
     };
 
-    const onTouchEnd = () => {
+    const onTouchEnd = (e) => {
         if (!isDragging) return;
         isDragging = false;
         sidebar.classList.remove('dragging');
+        
+        if (!hasMoved) {
+            // It was just a tap, toggle it
+            toggleSidebar();
+            return;
+        }
         
         const { maxTranslateY } = getHeights();
         const style = window.getComputedStyle(sidebar);
@@ -729,6 +787,13 @@ function setupBottomSheet() {
     dragHandle.addEventListener('touchstart', onTouchStart, { passive: true });
     document.addEventListener('touchmove', onTouchMove, { passive: true });
     document.addEventListener('touchend', onTouchEnd);
+    
+    // Allow clicking the header or drag handle to toggle
+    if (sidebarHeader) {
+        sidebarHeader.addEventListener('click', (e) => {
+            if (!hasMoved) toggleSidebar();
+        });
+    }
 }
 
 // 8. Reposition Chart for Mobile
